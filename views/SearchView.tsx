@@ -1,18 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { Image, Button } from 'react-native-elements';
-import { NavigationContainerProps, DrawerActions } from 'react-navigation';
+import { NavigationContainerProps, DrawerActions, FlatList } from 'react-navigation';
+import { useSelector } from 'react-redux';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AppHeader from '../components/AppHeader';
 import ItemContainer from '../components/ItemContainer';
 
 const SearchView: React.FC<NavigationContainerProps> = ({ navigation }) => {
-  const [filter, setFilter] = useState(navigation.getParam('prefilter', null));
-  const breedNames = navigation.getParam('breeds', []);
+  const [images, setImages] = useState([]);
 
-  console.log(filter);
+  const fetchImages = async () => {
+    let imgs;
+    await fetch('https://dog.ceo/api/breeds/image/random/10')
+      .then(response => response.json())
+      .then(response => {
+        if(response.status === 'success') {
+          imgs = response.message;
+        } else {
+          console.log('no no creo');
+          imgs = [];
+        }
+      })
+      return imgs;
+  }
 
+  useEffect(() => {
+    fetchImages().then(imgs => setImages(images.concat(imgs)));
+  }, []);
+
+  const handleEndReached = () => {
+    console.log('End Reached');
+    fetchImages().then(imgs => setImages(images.concat(imgs)));
+  }
+  
   return (
     <View style={{ flex: 1 }}>
       <AppHeader color='#F2F2F2' title='Search' 
@@ -22,36 +44,12 @@ const SearchView: React.FC<NavigationContainerProps> = ({ navigation }) => {
         buttonStyle={{ backgroundColor: 'transparent' }} onPress={() => navigation.openDrawer() }/> } 
       />
 
-      <ScrollView contentContainerStyle={{ flexDirection: 'column' }}>
-        <ItemContainer leftItem={{ imgSource: '../assets/dogs/test1.jpg', breed: 'pinsher', imgName: 'test1.jpg' }}
-          rightItem={{ imgSource: '../assets/dogs/test2.jpg', breed: 'pinsher', imgName: 'test2.jpg' }} navigation={navigation} />
-        <ItemContainer leftItem={{ imgSource: '../assets/dogs/test1.jpg', breed: 'pinsher', imgName: 'test1.jpg' }}
-          rightItem={{ imgSource: '../assets/dogs/test2.jpg', breed: 'pinsher', imgName: 'test2.jpg' }} navigation={navigation} />
-        <ItemContainer leftItem={{ imgSource: '../assets/dogs/test1.jpg', breed: 'pinsher', imgName: 'test1.jpg' }}
-          rightItem={{ imgSource: '../assets/dogs/test2.jpg', breed: 'pinsher', imgName: 'test2.jpg' }} navigation={navigation} />
-        <ItemContainer leftItem={{ imgSource: '../assets/dogs/test1.jpg', breed: 'pinsher', imgName: 'test1.jpg' }}
-          rightItem={{ imgSource: '../assets/dogs/test2.jpg', breed: 'pinsher', imgName: 'test2.jpg' }} navigation={navigation} />
-        <ItemContainer leftItem={{ imgSource: '../assets/dogs/test1.jpg', breed: 'pinsher', imgName: 'test1.jpg' }}
-          rightItem={{ imgSource: '../assets/dogs/test2.jpg', breed: 'pinsher', imgName: 'test2.jpg' }} navigation={navigation} />
-        <ItemContainer leftItem={{ imgSource: '../assets/dogs/test1.jpg', breed: 'pinsher', imgName: 'test1.jpg' }}
-          rightItem={{ imgSource: '../assets/dogs/test2.jpg', breed: 'pinsher', imgName: 'test2.jpg' }} navigation={navigation} />
-        <ItemContainer leftItem={{ imgSource: '../assets/dogs/test1.jpg', breed: 'pinsher', imgName: 'test1.jpg' }}
-          rightItem={{ imgSource: '../assets/dogs/test2.jpg', breed: 'pinsher', imgName: 'test2.jpg' }} navigation={navigation} />
-        <ItemContainer leftItem={{ imgSource: '../assets/dogs/test1.jpg', breed: 'pinsher', imgName: 'test1.jpg' }}
-          rightItem={{ imgSource: '../assets/dogs/test2.jpg', breed: 'pinsher', imgName: 'test2.jpg' }} navigation={navigation} />
-        <ItemContainer leftItem={{ imgSource: '../assets/dogs/test1.jpg', breed: 'pinsher', imgName: 'test1.jpg' }}
-          rightItem={{ imgSource: '../assets/dogs/test2.jpg', breed: 'pinsher', imgName: 'test2.jpg' }} navigation={navigation} />
-        <ItemContainer leftItem={{ imgSource: '../assets/dogs/test1.jpg', breed: 'pinsher', imgName: 'test1.jpg' }}
-          rightItem={{ imgSource: '../assets/dogs/test2.jpg', breed: 'pinsher', imgName: 'test2.jpg' }} navigation={navigation} />
-        <ItemContainer leftItem={{ imgSource: '../assets/dogs/test1.jpg', breed: 'pinsher', imgName: 'test1.jpg' }}
-          rightItem={{ imgSource: '../assets/dogs/test2.jpg', breed: 'pinsher', imgName: 'test2.jpg' }} navigation={navigation} />
-        <ItemContainer leftItem={{ imgSource: '../assets/dogs/test1.jpg', breed: 'pinsher', imgName: 'test1.jpg' }}
-          rightItem={{ imgSource: '../assets/dogs/test2.jpg', breed: 'pinsher', imgName: 'test2.jpg' }} navigation={navigation} />
-        <ItemContainer leftItem={{ imgSource: '../assets/dogs/test1.jpg', breed: 'pinsher', imgName: 'test1.jpg' }}
-          rightItem={{ imgSource: '../assets/dogs/test2.jpg', breed: 'pinsher', imgName: 'test2.jpg' }} navigation={navigation} />
-        <ItemContainer leftItem={{ imgSource: '../assets/dogs/test1.jpg', breed: 'pinsher', imgName: 'test1.jpg' }}
-          rightItem={{ imgSource: '../assets/dogs/test2.jpg', breed: 'pinsher', imgName: 'test2.jpg' }} navigation={navigation} />
-      </ScrollView>
+      <FlatList
+        data={images}
+        renderItem={(img) => <ItemContainer key={img.index} navigation={navigation} uri={img.item} /> }
+        onEndReachedThreshold={1}
+        onEndReached={handleEndReached}
+      />
     </View>
   )
 }

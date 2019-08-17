@@ -1,8 +1,9 @@
-import { SET_DARK_THEME, SET_BREEDS } from '../actionTypes'
+import { SET_DARK_THEME, SET_BREEDS, SET_FILTER } from '../actionTypes'
 
 const initialState = {
   darkTheme: false,
-  breeds: []
+  breeds: [],
+  filter: ''
 }
 
 export default function(state = initialState, action) {
@@ -19,6 +20,13 @@ export default function(state = initialState, action) {
       return {
         ...state,
         darkTheme: darkTheme
+      }
+
+    case SET_FILTER:
+      const { filter } = action.payload;
+      return {
+        ...state,
+        filter: filter
       }
 
     default: return state;
