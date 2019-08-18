@@ -11,7 +11,7 @@ import { SET_DARK_THEME, SET_BREEDS } from './redux/actionTypes'
 import MainView from './views/MainView';
 import DetailView from './views/DetailView';
 import SearchView from './views/SearchView';
-import SideMenu from './components/SideMenu';
+import FilterView from './views/FilterView';
 
 const ConsumerApp: React.FC = () => {
   //Dev:
@@ -31,7 +31,7 @@ const ConsumerApp: React.FC = () => {
   const getSubBreeds = (subs: string[]) => {
     let out = [];
     for (let sub in subs) {
-      out.push({ breed: subs[sub].charAt(0).toUpperCase() + subs[sub].substring(1), lowercaseName: subs[sub] })
+      out.push({ breed: subs[sub] })
     }
     return out;
   }
@@ -43,7 +43,7 @@ const ConsumerApp: React.FC = () => {
         if(response.status === 'success') {
           dogs = response.message;
           for(let dog in dogs) {
-            breedNames.push({ breed: dog.charAt(0).toUpperCase() + dog.substring(1), lowercaseBreed: dog, subBreeds: getSubBreeds(dogs[dog]) });
+            breedNames.push({ breed: dog, subBreeds: getSubBreeds(dogs[dog]) });
           }
           dispatch({ type: SET_BREEDS, payload: { breeds: breedNames } })
         }
@@ -67,13 +67,12 @@ const ConsumerApp: React.FC = () => {
     }
   }
 
-  const SearchStack = createDrawerNavigator({
+  const SearchStack = createStackNavigator({
     Search: SearchView,
+    Filter: FilterView
   }, {
-    drawerPosition: 'right',
-    drawerBackgroundColor: '#FFFFFF',
-    overlayColor: '#C0C0C0',
-    contentComponent: SideMenu
+    headerMode: 'none',
+    initialRouteName: 'Search'
   })
 
   const SearchContainer = createAppContainer(SearchStack);
@@ -90,13 +89,13 @@ const ConsumerApp: React.FC = () => {
   const AppContainer: NavigationContainer = createAppContainer(AppStack);
 
   if(!ready) {
-    <AppLoading
-      startAsync={_startAsync}
-      onError={console.warn}
-      onFinish={() => setReady(true)}
-    />
-    _startAsync().then(() => setReady(true));
-    return(null);
+    return(
+      <AppLoading
+        startAsync={_startAsync}
+        onError={console.warn}
+        onFinish={() => setReady(true)}
+      />
+    );
   } else {
     return (
       <AppContainer/>

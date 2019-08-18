@@ -19,7 +19,7 @@ const DetailView: React.FC<NavigationContainerProps> = ({ navigation }) => {
         buttonStyle={{ backgroundColor: 'transparent' }} onPress={() => navigation.goBack() }/> }
       />
       
-      <View style={{ width: '80%', height: 380, marginTop: 21, borderColor: '#CACACA', borderRadius: 10, borderWidth: 7 }}>
+      <View style={{ width: '95%', height: 415, marginTop: 80, borderColor: '#CACACA', borderRadius: 10, borderWidth: 7 }}>
         <Image
           source={{ uri: uri }}
           style={{ width: '100%', height: 300, paddingBottom: 7 }}
@@ -32,13 +32,6 @@ const DetailView: React.FC<NavigationContainerProps> = ({ navigation }) => {
           <View style={{ width: '100%', height: 0.6, backgroundColor: '#000000' }} />
           <Text style={{ fontFamily: 'Raleway-ExtraLight', textAlign: 'left', paddingLeft: 7, marginVertical: 7 }}>Filename: {filename}</Text>
         </View>
-      </View>
-
-      <View style={{ flexDirection: 'row', width: '100%', marginTop: 11 }}>
-        <Button title='Share File' onPress={() => console.log('XDDDDDD')} type='outline' titleStyle={{ fontFamily: 'Raleway',
-          fontSize: 18, color: '#000000' }} containerStyle={{ width: '45%', marginLeft: '4%' }} buttonStyle={{ borderColor: '#000000' }} />
-        <Button title='Download Image' onPress={() => console.log('descargate pues mardita')} type='outline' titleStyle={{ fontFamily: 'Raleway', fontSize: 18,
-          color: '#000000' }} containerStyle={{ width: '45%', marginRight: '4%', marginLeft: '2%' }} buttonStyle={{ borderColor: '#000000' }} />
       </View>
       
     </View>
