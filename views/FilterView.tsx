@@ -13,7 +13,7 @@ const FilterView: React.FC<NavigationContainerProps> = ({ navigation }) => {
   return (
       <View style={{ flex: 1 }}>
         <View style={{ alignItems: 'center', backgroundColor: '#666' }}>
-          <Button icon={<Icon name='arrow-left' color='black' size={32} />} buttonStyle={{ alignSelf: 'flex-start', marginTop: 24, backgroundColor: 'transparent' }} 
+          <Button icon={<Icon name='arrow-left' color='black' size={32} style={{ color: '#FFF' }} />} buttonStyle={{ alignSelf: 'flex-start', marginTop: 24, marginLeft: 8 ,backgroundColor: 'transparent' }} 
             containerStyle={{ alignSelf: 'flex-start' }} onPress={() => navigation.navigate('Search')}/>
           <Image
             source={require('../assets/dogs/main.jpg')}
@@ -24,6 +24,9 @@ const FilterView: React.FC<NavigationContainerProps> = ({ navigation }) => {
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false} >
+          <Button title='Clear Filter' type='outline' onPress={() => navigation.navigate('Search', { breed: undefined, subBreed: undefined })} titleStyle={{ fontFamily: 'Raleway-Bold', fontSize: 15, color: '#000' }}
+            buttonStyle={{ height: 50, borderColor: '#000', borderRadius: 0, borderLeftWidth: 0, borderRightWidth: 0, borderBottomWidth: 0 }} />
+
           <Button title='Breeds' type='outline' onPress={() => setShowBreeds(!showBreeds)} titleStyle={{ fontFamily: 'Raleway-Bold', fontSize: 15, color: '#000' }}
             buttonStyle={{ height: 50, borderColor: '#000', borderRadius: 0, borderLeftWidth: 0, borderRightWidth: 0 }} />
           

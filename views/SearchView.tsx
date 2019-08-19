@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
-import { Image, Button } from 'react-native-elements';
-import { NavigationContainerProps, DrawerActions, FlatList } from 'react-navigation';
-import { useSelector } from 'react-redux';
+import { View } from 'react-native';
+import { Button } from 'react-native-elements';
+import { NavigationContainerProps, FlatList } from 'react-navigation';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AppHeader from '../components/AppHeader';
 import ItemContainer from '../components/ItemContainer';
+import LoadingView from './LoadingView';
 
 const SearchView: React.FC<NavigationContainerProps> = ({ navigation }) => {
+  const [ready, setReady] = useState(false);
   const [images, setImages] = useState([]);
 
   const filter = { breed: navigation.getParam('breed'), subBreed: navigation.getParam('subBreed') }
@@ -22,8 +23,6 @@ const SearchView: React.FC<NavigationContainerProps> = ({ navigation }) => {
         if(response.status === 'success') {
           imgs = response.message;
         } else {
-          console.log('no no creo');
-          console.log(endpoint);
           console.log(response.status);
           imgs = [];
         }
@@ -43,26 +42,29 @@ const SearchView: React.FC<NavigationContainerProps> = ({ navigation }) => {
     } else {
       endpoint = 'https://dog.ceo/api/breeds/image/random/10'
     }
-    // https://dog.ceo/api/image/random/10
-    // https://dog.ceo/api/breeds/image/random
 
     return endpoint;
   }
 
   useEffect(() => {
-    console.log('Update Feed:');
-    console.log(filter);
-    setImages(null);
-    fetchImages().then(imgs => setImages(images.concat(imgs)));
+    setReady(false);
+    fetchImages().then(imgs => {
+      setImages(imgs);
+      setReady(true);
+    });
   }, [filter.breed, filter.subBreed]);
 
   const handleEndReached = () => {
-    console.log('End Reached');
-    fetchImages().then(imgs => setImages(images.concat(imgs)));
+    setReady(false);
+    fetchImages().then(imgs => {
+      setImages(images.concat(imgs));
+      setReady(true);
+    });
   }
   
   return (
     <View style={{ flex: 1 }}>
+      {!ready && <LoadingView/>}
       <AppHeader color='#F2F2F2' title='Search' 
         leftComponent={<Button icon={<Icon name='arrow-left' color='black' size={30} />} containerStyle={{ backgroundColor: 'transparent' }} 
         buttonStyle={{ backgroundColor: 'transparent' }} onPress={() => navigation.navigate('Main') }/> }

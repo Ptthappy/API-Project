@@ -3,7 +3,6 @@ import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { Image, Button } from 'react-native-elements';
 import { NavigationContainerProps } from 'react-navigation';
 import { useSelector, useDispatch } from 'react-redux';
-import { SET_FILTER } from '../redux/actionTypes';
 
 import AppHeader from '../components/AppHeader';
 import ErrorView from '../components/ErrorView';
